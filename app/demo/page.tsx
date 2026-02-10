@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type Role = "user" | "assistant";
@@ -16,6 +17,12 @@ const DEMO_CHIPS = [
   "Hur sjukanmäler jag mig?",
   "Hur funkar flex?",
   "Hur funkar semester?",
+  "Vad gäller för OB och övertid?",
+  "Hur funkar VAB?",
+  "Vad gäller för föräldraledighet?",
+  "Har vi friskvårdsbidrag?",
+  "Vad händer med min tjänstepension?",
+  "Vad gäller för uppsägningstid?",
 ];
 
 const MOCK_ANSWERS: Record<string, Message[]> = {
@@ -134,99 +141,119 @@ export default function DemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <div className="mx-auto flex min-h-screen max-w-[720px] flex-col border-x border-zinc-200 bg-white">
+    <div className="min-h-screen bg-[#f3f4f6] text-zinc-900">
+      <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-4 sm:py-6">
         {/* Header */}
-        <header className="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
+        <header className="mb-4 flex items-center gap-3 sm:mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900">
+            <Image
+              src="/vadgaller-logo.svg"
+              alt="Vadgäller logotyp"
+              width={24}
+              height={24}
+            />
+          </div>
           <div className="flex flex-col">
             <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">
               Demo
             </span>
-            <h1 className="text-base font-semibold text-zinc-900">
-              Vad gäller hos oss?
+            <h1 className="text-lg font-semibold text-zinc-900">
+              Vadgäller – demo
             </h1>
+            <p className="text-xs text-zinc-500">
+              Svar baseras på personalhandbok, kollektivavtal och officiella
+              HR-svar.
+            </p>
           </div>
-          <span className="text-xs text-zinc-400">vadgäller.se</span>
         </header>
 
-        {/* Content */}
-        <main className="flex min-h-0 flex-1 flex-col px-4 pb-24 pt-3">
-          <p className="mb-3 text-xs text-zinc-500">
-            Svar baseras på företagets dokument och officiella svar.
-          </p>
+        {/* Chat container */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+          <main className="flex min-h-0 flex-1 flex-col px-4 pb-24 pt-4 sm:px-6">
+            <p className="mb-4 text-xs text-zinc-500">
+              Svar baseras på företagets dokument och officiella svar. Det här
+              är en öppen demo utan riktiga företagsuppgifter.
+            </p>
 
-          {/* Empty state chips */}
-          {messages.length === 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {DEMO_CHIPS.map((chip) => (
-                <button
-                  key={chip}
-                  type="button"
-                  className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-zinc-100"
-                  onClick={() => handleAsk(chip)}
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Messages */}
-          <div className="flex-1 space-y-3 overflow-y-auto pb-2">
-            {messages.map((message) => {
-              const isUser = message.role === "user";
-              return (
-                <div
-                  key={message.id}
-                  className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl border text-sm shadow-sm ${
-                      isUser
-                        ? "bg-zinc-900 text-zinc-50 border-zinc-900"
-                        : "bg-white text-zinc-900 border-zinc-200"
-                    }`}
+            {/* Empty state chips */}
+            {messages.length === 0 && (
+              <div className="mb-6 flex flex-wrap gap-2">
+                {DEMO_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-100"
+                    onClick={() => handleAsk(chip)}
                   >
-                    <div className="px-3 py-2">{message.content}</div>
-                    {!isUser && message.source && (
-                      <div className="border-t border-zinc-100 px-3 py-1.5 text-[10px] uppercase tracking-wide text-zinc-500">
-                        Källa: {message.source}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </main>
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
 
-        {/* Sticky input */}
-        <footer className="sticky bottom-0 border-t border-zinc-200 bg-white px-4 py-3">
-          <form
-            onSubmit={handleSubmit}
-            className="flex items-end gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2 shadow-sm"
-          >
-            <div className="flex-1">
+            {/* Messages */}
+            <div className="flex-1 space-y-3 overflow-y-auto pb-2">
+              {messages.map((message) => {
+                const isUser = message.role === "user";
+                return (
+                  <div
+                    key={message.id}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-2xl text-sm shadow-sm ${
+                        isUser
+                          ? "bg-[#e5f0ff] text-zinc-900"
+                          : "bg-white text-zinc-900 border border-zinc-200"
+                      }`}
+                    >
+                      <div className="px-3 py-2 space-y-2">
+                        <p>{message.content}</p>
+                        {!isUser &&
+                          message.source === "Standardtext (saknas)" && (
+                            <button
+                              type="button"
+                              className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+                            >
+                              Kontakta HR
+                            </button>
+                          )}
+                      </div>
+                      {!isUser && message.source && (
+                        <div className="border-t border-zinc-100 px-3 py-1.5 text-[10px] uppercase tracking-wide text-zinc-500">
+                          Källa: {message.source}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </main>
+
+          {/* Sticky input */}
+          <footer className="sticky bottom-0 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
+            <form
+              onSubmit={handleSubmit}
+              className="flex items-center gap-3 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 shadow-sm"
+            >
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ställ en fråga…"
-                className="w-full border-none bg-transparent text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:ring-0"
+                className="flex-1 border-none bg-transparent text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:ring-0"
               />
-              <p className="mt-1 text-[10px] text-zinc-400">
-                Svar baseras på företagets dokument och officiella svar.
-              </p>
-            </div>
-            <button
-              type="submit"
-              className="inline-flex h-8 items-center rounded-full bg-zinc-900 px-4 text-xs font-semibold text-zinc-50 hover:bg-zinc-800 disabled:opacity-40"
-              disabled={!input.trim()}
-            >
-              Skicka
-            </button>
-          </form>
-        </footer>
+              <button
+                type="submit"
+                className="inline-flex h-8 items-center rounded-full bg-zinc-900 px-4 text-xs font-semibold text-zinc-50 hover:bg-zinc-800 disabled:opacity-40"
+                disabled={!input.trim()}
+              >
+                Skicka
+              </button>
+            </form>
+          </footer>
+        </div>
       </div>
     </div>
   );
